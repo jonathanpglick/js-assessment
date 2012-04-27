@@ -14,16 +14,45 @@ define([ 'use!underscore' ], function(_) {
 
     it("you should be able to determine the location of an item in an array", function() {
       // define a function for fn so that the following will pass
+      var fn = function(a, b) {
+        var i,
+            l = a.length;
+        for (i = 0; i < l; i++) {
+          if (a[i] === b) {
+            return i;
+          }
+        }
+      };
       expect(fn(a, 3)).to.be(2);
     });
 
     it("you should be able to add the values of an array", function() {
       // define a function for fn so that the following will pass
+      var fn = function(a, b) {
+        var i,
+            l = a.length,
+            total = 0;
+        for (i = 0; i < l; i++) {
+          total += a[i];
+        }
+        return total;
+      };
       expect(fn(a)).to.be(10);
     });
 
     it("you should be able to remove an item from an array", function() {
       // define a function for fn so that the following will pass
+      var fn = function (a, b) {
+        var c = [],
+            i,
+            l = a.length;
+        for (i = 0; i < l; i++) {
+          if (a[i] !== b) {
+            c.push(a[i]);
+          }
+        }
+        return c;
+      };
       var result = fn(a, 2);
       expect(result).to.have.length(3);
       expect(result.join(' ')).to.be('1 3 4');
@@ -31,6 +60,10 @@ define([ 'use!underscore' ], function(_) {
 
     it("you should be able to add an item to the end of an array", function() {
       // define a function for fn so that the following will pass
+      var fn = function(a, b) {
+        a.push(b);
+        return a;
+      };
       var result = fn(a, 10);
       expect(result).to.have.length(5);
       expect(result[result.length - 1]).to.be(10);
@@ -38,6 +71,10 @@ define([ 'use!underscore' ], function(_) {
 
     it("you should be able to create an array from two arrays", function() {
       // define a function for fn so that the following will pass
+      var fn = function(a, b) {
+        a = a.concat(b);
+        return a;
+      };
       var c = [ 'a', 'b', 'c' ],
           result = fn(a, c);
 
@@ -47,6 +84,10 @@ define([ 'use!underscore' ], function(_) {
 
     it("you should be able to add an item anywhere in an array", function() {
       // define a function for fn so that the following will pass
+      var fn = function (a, b, c) {
+        a.splice(c, 0, b);
+        return a;
+      };
       var result = fn(a, 'z', 2);
 
       expect(result).to.have.length(5);

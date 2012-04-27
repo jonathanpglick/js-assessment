@@ -6,11 +6,18 @@ define([ 'use!underscore' ], function(_) {
         fn = function() {};
 
     it("you should be able to use an array as arguments when calling a function", function() {
+      var fn = function(a) {
+        var greeting = sayIt.apply(this, a);
+        return greeting;
+      };
       var result = fn([ 'Hello', 'Ellie', '!' ]);
       expect(result).to.be('Hello, Ellie!');
     });
 
     it("you should be able to change the context in which a function is called", function() {
+      var fn = function() {
+        return speak.call(obj);
+      };
       var speak = function() {
             return sayIt(this.greeting, this.name, '!!!');
           },
@@ -25,12 +32,22 @@ define([ 'use!underscore' ], function(_) {
     });
 
     it("you should be able to return a function from a function", function() {
+      var fn = function(a) {
+          return function(b) {
+            return a + ', ' + b;
+          };
+      };
       // define a function for fn so that the following will pass
       expect(fn('Hello')('world')).to.be('Hello, world');
     });
 
     it("you should be able to create a 'partial' function", function() {
       // define a function for fn so that the following will pass
+      var fn = function(func, a, b) {
+        return function(c) {
+          return func(a, b, c);
+        };
+      }
       var partial = fn(sayIt, 'Hello', 'Ellie');
       expect(partial('!!!')).to.be('Hello, Ellie!!!');
     });
@@ -38,6 +55,14 @@ define([ 'use!underscore' ], function(_) {
     it("you should be able to use arguments", function () {
       fn = function () {
         // you can only edit function body here
+        var args = arguments,
+            i,
+            l = args.length,
+            total = 0;
+        for (i = 0; i < l; i++) {
+          total += args[i];
+        }
+        return total;
       };
 
       var a = Math.random(), b = Math.random(), c = Math.random(), d = Math.random();
@@ -50,6 +75,9 @@ define([ 'use!underscore' ], function(_) {
     it("you should be able to apply functions", function () {
       fn = function (fun) {
         // you can only edit function body here
+        var slice = Array.prototype.slice;
+        var args = slice.call(arguments, 1);
+        fun.apply(null, args);
       };
 
       (function () {
@@ -84,6 +112,12 @@ define([ 'use!underscore' ], function(_) {
     it("you should be able to curry existing functions", function () {
       fn = function (fun) {
         // you can only edit function body here
+        var args = Array.prototype.slice.call(arguments, 1);
+        return function() {
+          var moreArgs = Array.prototype.slice.call(arguments);
+          args = args.concat(moreArgs);
+          return fun.apply(window, args);
+        };
       };
 
       var curryMe = function (x, y, z) {
@@ -105,6 +139,20 @@ define([ 'use!underscore' ], function(_) {
 
       fn = function (vals) {
         // you can only edit function body here
+        var i,
+            l = vals.length,
+            funcs = [],
+            makeFn = function(val) {
+              return function() {
+                return doSomeStuff(val);
+              };
+            };
+
+        for (i = 0; i < l; i++) {
+          var func = makeFn(vals[i]);
+          funcs.push(func);
+        }
+        return funcs;
       };
 
       doSomeStuff = function (x) { return x * x; };

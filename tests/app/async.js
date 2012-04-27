@@ -11,6 +11,11 @@ define([ 'jquery', 'use!underscore' ], function($, _) {
 
       fn = function() {
         // write a function that makes the test pass
+        return {
+          then: function(callback) {
+            callback(true);
+          }
+        };
       };
 
       fn().then(function(result) {
@@ -34,7 +39,15 @@ define([ 'jquery', 'use!underscore' ], function($, _) {
       // tests function once the data has been a) retrieved from the server and
       // b) manipulated so the tests will pass.
 
-      tests();
+      jQuery.get(url, function(data) {
+        peopleArray = [];
+        var l = data.people.length;
+        for (var i = 0; i < l; i++) {
+          peopleArray.push(data.people[i].name);
+        }
+        peopleArray.sort();
+        tests();
+      });
     });
   });
 });

@@ -5,6 +5,13 @@ define([ 'use!underscore' ], function(_) {
     it("you should be able to create a function that returns a module", function() {
       fn = function() {
         // write a function that makes the tests pass
+        return {
+          greeting: arguments[0],
+          name: arguments[1],
+          sayIt: function() {
+            return [this.greeting, this.name].join(', ');
+          }
+        };
       };
 
       var module = fn('hello', 'matt');
